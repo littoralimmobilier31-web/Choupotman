@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hors ligne · CHOUPOTMAN OS</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100dvh; display: grid; place-items: center; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #f9fafb; color: #1e2130;
+  }
+  @media (prefers-color-scheme: dark) { body { background: #030306; color: #e9e9ef; } }
+  .card { max-width: 26rem; text-align: center; }
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 52px; height: 52px; border-radius: 14px; background: #725ee0; color: #fff;
+    font-weight: 700; font-size: 18px; letter-spacing: -0.5px;
+  }
+  h1 { margin: 20px 0 8px; font-size: 1.3rem; letter-spacing: -0.02em; }
+  p { margin: 0; line-height: 1.6; font-size: 0.9375rem; opacity: 0.7; }
+  button {
+    margin-top: 22px; padding: 10px 20px; border: 0; border-radius: 10px; cursor: pointer;
+    background: #725ee0; color: #fff; font: inherit; font-size: 0.875rem; font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">BC</span>
+    <h1>Vous êtes hors ligne</h1>
+    <p>Cette page n’est pas disponible sans connexion. Reconnectez-vous puis réessayez — les pages déjà consultées restent accessibles.</p>
+    <button type="button" onclick="location.reload()">Réessayer</button>
+  </div>
+</body>
+</html>
