@@ -86,7 +86,7 @@ export const config = {
 
   ai: {
     get apiKey(): string { return str('ANTHROPIC_API_KEY'); },
-    get model(): string { return str('AI_MODEL', 'claude-sonnet-5'); },
+    get model(): string { return str('AI_MODEL', 'claude-opus-5'); },
     get maxTokens(): number { return int('AI_MAX_TOKENS', 1600); },
     /** False when no key is configured — the AI layer then uses its
      *  database-grounded deterministic fallback instead of failing. */
