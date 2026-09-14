@@ -18,6 +18,7 @@ export const ADMIN_LOGIN_PATH = '/espace-admin/connexion';
 export const ADMIN_HOME_PATH = '/espace-admin';
 export const CHANGE_PASSWORD_PATH = '/espace-admin/changer-mot-de-passe';
 export const CLIENT_LOGIN_PATH = '/client/connexion';
+export const CLIENT_PASSWORD_PATH = '/client/mot-de-passe?obligatoire=1';
 
 /**
  * Requires an authenticated admin user.
@@ -116,9 +117,22 @@ export async function apiRequire(
 
 // ── Client portal ────────────────────────────────────────────────────────
 
-export async function requireClientUser(): Promise<ClientUserRow> {
+/**
+ * Requires a signed-in portal user.
+ *
+ * A temporary password is bounced to the change screen from every other portal
+ * route, exactly as the admin does — an access the owner issued and still knows
+ * must not stay usable. The change page itself passes `allowPasswordChange`, so
+ * the redirect cannot loop.
+ */
+export async function requireClientUser(
+  options: { allowPasswordChange?: boolean } = {},
+): Promise<ClientUserRow> {
   const ctx = await getClientSessionContext();
   if (!ctx) redirect(CLIENT_LOGIN_PATH);
+  if (ctx.clientUser.must_change_password === 1 && !options.allowPasswordChange) {
+    redirect(CLIENT_PASSWORD_PATH);
+  }
   return ctx.clientUser;
 }
 

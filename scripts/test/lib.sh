@@ -106,6 +106,24 @@ admin_login() {
   fi
 }
 
+# Clears the authentication rate-limit buckets before a test that signs in and
+# changes passwords several times.
+#
+# The limiters are deliberately tight (a handful of attempts per window), and
+# that is exactly what `auth-flow.sh` asserts. A functional test that signs two
+# portal users in, fails twice on purpose and then changes a password would
+# exhaust them and end up measuring the limiter instead of the feature.
+#
+# The password-reset bucket matters for a second reason: it is keyed on the
+# account id, and SQLite reuses a rowid once the highest row is deleted — so a
+# test that creates and deletes accounts sees the *previous* run's bucket.
+reset_auth_limits() {
+  npx tsx -e "
+import { run } from './src/lib/db/client';
+run(\"DELETE FROM rate_limit_hits WHERE bucket LIKE 'login:%' OR bucket LIKE 'passwordReset:%'\");
+" >/dev/null 2>&1 || true
+}
+
 summary() {
   printf '\n\033[1mRésultat: %d réussis, %d échoués\033[0m\n' "$PASS" "$FAIL"
   [[ "$FAIL" -eq 0 ]]

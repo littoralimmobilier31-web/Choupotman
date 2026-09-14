@@ -10,6 +10,7 @@ import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, Progress } from '@/components/ui/misc';
 import { TableWrap, Table, Thead, Th, Tbody, Tr, Td } from '@/components/ui/table';
 import { PageHeader, Section, DetailGrid, MiniStat, DemoBadge, ListEmpty } from '@/components/admin/page-kit';
+import { ClientAccessPanel } from '@/components/admin/client-access';
 import { ClientForm, type ClientFormValues } from '@/components/admin/client-form';
 import { requirePermission } from '@/lib/auth/guard';
 import { can } from '@/lib/auth/permissions';
@@ -483,23 +484,21 @@ export default async function ClientDetailPage({
                 <CardTitle>Espace client</CardTitle>
               </CardHeader>
               <CardBody className="pt-3">
-                {portalUsers.length === 0 ? (
-                  <p className="text-[0.75rem] leading-relaxed text-fg-muted">
-                    Aucun accès client créé. Le portail client permettra à ce client de suivre ses projets,
-                    ses fichiers et ses factures.
-                  </p>
-                ) : (
-                  <ul className="space-y-2">
-                    {portalUsers.map((portalUser) => (
-                      <li key={portalUser.id} className="flex items-center justify-between gap-2 text-[0.75rem]">
-                        <span className="min-w-0 truncate text-fg">{portalUser.email}</span>
-                        <Badge tone={portalUser.is_active === 1 ? 'success' : 'neutral'}>
-                          {portalUser.is_active === 1 ? 'Actif' : 'Inactif'}
-                        </Badge>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <ClientAccessPanel
+                  csrf={csrf ?? ''}
+                  clientId={client.id}
+                  clientName={client.name}
+                  clientEmail={client.email}
+                  canManage={can(user, 'clients.update')}
+                  users={portalUsers.map((portalUser) => ({
+                    id: portalUser.id,
+                    email: portalUser.email,
+                    full_name: portalUser.full_name,
+                    is_active: portalUser.is_active,
+                    last_login_at: portalUser.last_login_at,
+                    must_change_password: portalUser.must_change_password,
+                  }))}
+                />
               </CardBody>
             </Card>
           </aside>

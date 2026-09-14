@@ -345,3 +345,32 @@ export function deactivateClientUser(id: number): void {
     db.prepare(`UPDATE client_sessions SET revoked_at = datetime('now') WHERE client_user_id = ?`).run(id);
   });
 }
+
+export function setClientUserActive(id: number, active: boolean): void {
+  if (!active) {
+    deactivateClientUser(id);
+    return;
+  }
+  run('UPDATE client_users SET is_active = 1 WHERE id = ?', [id]);
+}
+
+/**
+ * Admin-issued temporary password.
+ *
+ * Distinct from `setClientUserPassword`, which records a password the client
+ * chose themselves and therefore clears the change flag. Here the opposite is
+ * true: the owner knows this password, so the client must replace it at the next
+ * login. Existing sessions are revoked, since a reset usually means the account
+ * may have been compromised or handed to someone new.
+ */
+export function issueTemporaryClientPassword(id: number, passwordHash: string): void {
+  transaction((db) => {
+    db.prepare(
+      `UPDATE client_users
+       SET password_hash = ?, must_change_password = 1,
+           invite_token_hash = NULL, invite_expires_at = NULL
+       WHERE id = ?`,
+    ).run(passwordHash, id);
+    db.prepare(`UPDATE client_sessions SET revoked_at = datetime('now') WHERE client_user_id = ?`).run(id);
+  });
+}

@@ -107,3 +107,22 @@ export function sum(values: (number | null | undefined)[]): number {
 export function unique<T>(values: T[]): T[] {
   return Array.from(new Set(values));
 }
+
+/**
+ * Human-readable file size.
+ *
+ * Binary units (1 KiB = 1024 B) reported with the familiar shorthand, which is
+ * what every file manager shows; a French non-breaking space keeps the number
+ * and the unit together on a line.
+ */
+export function formatBytes(bytes: number | null | undefined): string {
+  const value = Number(bytes ?? 0);
+  if (!Number.isFinite(value) || value <= 0) return '0 o';
+
+  const units = ['o', 'Ko', 'Mo', 'Go', 'To'];
+  const exponent = Math.min(units.length - 1, Math.floor(Math.log(value) / Math.log(1024)));
+  const scaled = value / 1024 ** exponent;
+  const decimals = exponent === 0 || scaled >= 100 ? 0 : scaled >= 10 ? 1 : 2;
+
+  return `${scaled.toFixed(decimals).replace('.', ',')} ${units[exponent]}`;
+}
