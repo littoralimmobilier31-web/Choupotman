@@ -15,17 +15,21 @@ set -uo pipefail
 BASE="${BASE:-http://localhost:3000}"
 PASS=0
 FAIL=0
-JAR="$(mktemp)"
 CSRF=""
+
+# The cookie jar is cached between scripts on purpose: the login endpoint is
+# rate-limited per IP (and it should be), so running four test scripts in a row
+# would lock itself out if each one logged in afresh. Set TEST_FRESH_LOGIN=1 to
+# force a new login. data/tmp is gitignored.
+mkdir -p data/tmp 2>/dev/null || true
+JAR="${TEST_JAR:-data/tmp/test-session.jar}"
+touch "$JAR" 2>/dev/null || JAR="$(mktemp)"
 
 # The bootstrap password is single-use; after `scripts/test/auth-flow.sh` has run
 # the account uses the password that script set. This default is that test value —
 # never a real credential. Override with ADMIN_PASSWORD.
 ADMIN_LOGIN="${ADMIN_LOGIN:-Choupotman}"
 ADMIN_PASSWORD="${ADMIN_PASSWORD:-${TEST_PASSWORD:-Chp-Test-2026!ok}}"
-
-cleanup() { rm -f "$JAR"; }
-trap cleanup EXIT
 
 say()  { printf '\n\033[1m%s\033[0m\n' "$1"; }
 ok()   { PASS=$((PASS+1)); printf '  \033[32m✓\033[0m %s\n' "$1"; }
@@ -68,8 +72,21 @@ expect_contains() {
 }
 
 # Logs in and leaves a usable session cookie + CSRF token in $CSRF.
+#
+# Reuses the cached session when it is still valid: /api/auth/csrf answers
+# `"scope":"session"` only for an authenticated caller, which is a reliable and
+# side-effect-free way to ask "am I still logged in?".
 admin_login() {
-  local nonce resp
+  local nonce resp probe
+
+  if [[ "${TEST_FRESH_LOGIN:-}" != '1' ]]; then
+    probe="$(req "$BASE/api/auth/csrf")"
+    if grep -q '"scope":"session"' <<<"$probe"; then
+      CSRF="$(sed -n 's/.*"token":"\([^"]*\)".*/\1/p' <<<"$probe")"
+      [[ -n "$CSRF" ]] && return 0
+    fi
+  fi
+
   nonce="$(req "$BASE/api/auth/csrf" | sed -n 's/.*"token":"\([^"]*\)".*/\1/p')"
   resp="$(req -X POST "$BASE/api/auth/connexion" -H 'Content-Type: application/json' \
     -d "{\"login\":\"$ADMIN_LOGIN\",\"password\":\"$ADMIN_PASSWORD\",\"csrf\":\"$nonce\"}")"

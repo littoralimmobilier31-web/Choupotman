@@ -213,7 +213,9 @@ export function updateQuote(id: number, patch: Partial<QuoteInput>): void {
     params.push(id);
     run(`UPDATE quotes SET ${fields.join(', ')}, updated_at = datetime('now') WHERE id = ?`, params);
   }
-  if (patch.items) replaceQuoteItems(id, patch.items);
+  // `!== undefined` rather than truthiness: an explicitly empty array means
+  // "remove every line", which is a legitimate edit.
+  if (patch.items !== undefined) replaceQuoteItems(id, patch.items);
   else recalcQuote(id);
   reindexQuote(id);
 }
@@ -463,7 +465,9 @@ export function updateInvoice(id: number, patch: Partial<InvoiceInput>): void {
     params.push(id);
     run(`UPDATE invoices SET ${fields.join(', ')}, updated_at = datetime('now') WHERE id = ?`, params);
   }
-  if (patch.items) replaceInvoiceItems(id, patch.items);
+  // `!== undefined` rather than truthiness: an explicitly empty array means
+  // "remove every line", which is a legitimate edit on a draft.
+  if (patch.items !== undefined) replaceInvoiceItems(id, patch.items);
   else recalcInvoice(id);
   reindexInvoice(id);
 }
@@ -548,6 +552,11 @@ export function cancelInvoice(id: number): void {
 }
 
 /** Converts an accepted quote into a draft invoice, copying every line. */
+/** The invoice generated from a quote, if one exists. */
+export function invoiceForQuote(quoteId: number): InvoiceWithMeta | null {
+  return one<InvoiceWithMeta>(`${INVOICE_SELECT} WHERE i.quote_id = ? ORDER BY i.id LIMIT 1`, [quoteId]);
+}
+
 export function invoiceFromQuote(quoteId: number, createdBy?: number | null): number | null {
   const quote = one<QuoteRow>('SELECT * FROM quotes WHERE id = ?', [quoteId]);
   if (!quote) return null;

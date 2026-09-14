@@ -1,5 +1,5 @@
 import { createHandler, ok, badRequest, notFound, parseId } from '@/lib/api/handler';
-import { taskSchema, taskMoveSchema } from '@/lib/validation/admin';
+import { taskSchema, taskMoveSchema, patchOf } from '@/lib/validation/admin';
 import * as projectsRepo from '@/lib/db/repositories/projects';
 import { emit } from '@/lib/automation/engine';
 import { diffFields } from '@/lib/db/repositories/activity';
@@ -30,7 +30,7 @@ export async function PATCH(request: Request, context: Params): Promise<Response
   if (id === null) return badRequest('Identifiant invalide.');
 
   return createHandler(
-    { permission: 'tasks.update', schema: taskSchema.partial() },
+    { permission: 'tasks.update', schema: patchOf(taskSchema) },
     async ({ body, user, log }) => {
       const before = projectsRepo.findTask(id);
       if (!before) return notFound('Tâche introuvable.');

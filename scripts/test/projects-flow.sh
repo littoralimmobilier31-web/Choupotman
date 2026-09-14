@@ -22,7 +22,7 @@ cleanup_project() {
   if [[ -n "$PROJECT_ID" ]]; then
     api DELETE "/api/projets/$PROJECT_ID?force=1" >/dev/null 2>&1
   fi
-  rm -f "$JAR"
+  # The cookie jar is intentionally kept: see scripts/test/lib.sh.
 }
 trap cleanup_project EXIT
 

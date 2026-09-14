@@ -40,6 +40,17 @@ export const POST = createHandler(
       if (invoice.status === 'cancelled') {
         return Response.json({ error: 'Cette facture est annulée.' }, { status: 409 });
       }
+      /**
+       * A draft has not been sent to anyone, so there is nothing for a client to
+       * have paid. Recording against it would also let the amounts keep changing
+       * underneath a payment, which is how a balance silently goes wrong.
+       */
+      if (invoice.status === 'draft') {
+        return Response.json(
+          { error: 'Cette facture est encore un brouillon : émettez-la avant d’enregistrer un règlement.' },
+          { status: 409 },
+        );
+      }
       // One-cent tolerance absorbs rounding on the client side.
       if (money(body.amount) > money(invoice.balance_due + 0.01)) {
         return Response.json(

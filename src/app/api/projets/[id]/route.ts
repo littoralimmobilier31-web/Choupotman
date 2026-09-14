@@ -1,5 +1,5 @@
 import { createHandler, ok, badRequest, notFound, parseId } from '@/lib/api/handler';
-import { projectSchema } from '@/lib/validation/admin';
+import { projectSchema, patchOf } from '@/lib/validation/admin';
 import { diffFields } from '@/lib/db/repositories/activity';
 import * as projectsRepo from '@/lib/db/repositories/projects';
 import { listInvoices, listQuotes, listContracts } from '@/lib/db/repositories/finance';
@@ -41,7 +41,7 @@ export async function PATCH(request: Request, context: Params): Promise<Response
   if (id === null) return badRequest('Identifiant invalide.');
 
   return createHandler(
-    { permission: 'projects.update', schema: projectSchema.partial() },
+    { permission: 'projects.update', schema: patchOf(projectSchema) },
     async ({ body, user, log }) => {
       const before = projectsRepo.findProject(id);
       if (!before) return notFound('Projet introuvable.');

@@ -19,6 +19,43 @@ const optionalDate = isoDate.optional().or(z.literal('')).nullable();
 /** Present on every mutating request; verified by the handler, not here. */
 const csrf = z.string().optional();
 
+/**
+ * Turns a create schema into a PATCH schema.
+ *
+ * `schema.partial()` alone is **not** safe here: Zod keeps a field's `.default()`
+ * inside the optional wrapper, so parsing `{ status: 'sent' }` against a partial
+ * schema yields `{ status: 'sent', items: [], tax_rate: 0, discount_type: 'none' }`.
+ * A repository that faithfully applies the patch then wipes the document's lines
+ * and resets its VAT — from a request that only meant to change the status.
+ *
+ * `patchOf` strips the defaults first, so an absent key stays genuinely absent
+ * and "unspecified" can never be mistaken for "reset to the default".
+ */
+type Undefaulted<T> = T extends z.ZodDefault<infer Inner> ? Inner : T;
+type PatchShape<T extends z.ZodRawShape> = { [K in keyof T]: z.ZodOptional<Undefaulted<T[K]>> };
+
+export function patchOf<T extends z.ZodRawShape>(schema: z.ZodObject<T>): z.ZodObject<PatchShape<T>> {
+  const shape: Record<string, z.ZodTypeAny> = {};
+  for (const [key, field] of Object.entries(schema.shape)) {
+    shape[key] = stripDefault(field as z.ZodTypeAny).optional();
+  }
+  // The runtime shape matches `PatchShape<T>` by construction; the cast is only
+  // needed because the loop erases the per-key types.
+  return z.object(shape) as unknown as z.ZodObject<PatchShape<T>>;
+}
+
+function stripDefault(field: z.ZodTypeAny): z.ZodTypeAny {
+  // Unwrap nested default/optional/nullable layers until a real type is reached.
+  let current = field;
+  for (let depth = 0; depth < 8; depth += 1) {
+    const def = (current as unknown as { def?: { type?: string; innerType?: z.ZodTypeAny } }).def;
+    if (def?.type === 'default' && def.innerType) current = def.innerType;
+    else if (def?.type === 'prefault' && def.innerType) current = def.innerType;
+    else break;
+  }
+  return current;
+}
+
 // ── Clients ──────────────────────────────────────────────────────────────
 
 export const clientSchema = z.object({

@@ -47,6 +47,10 @@ export function Sparkline({
   );
 }
 
+const TONE_TEXT: Record<'default' | 'success' | 'warning' | 'danger', string> = {
+  default: 'text-fg', success: 'text-success', warning: 'text-warning', danger: 'text-danger',
+};
+
 /**
  * Stat tile contract: label (sentence case) · value · optional delta vs a named
  * period · optional sparkline. `upIsGood` flips the delta colour for metrics
@@ -63,6 +67,7 @@ export function StatTile({
   href,
   hint,
   slot = 0,
+  tone = 'default',
   className,
 }: {
   label: string;
@@ -75,6 +80,12 @@ export function StatTile({
   href?: string;
   hint?: string;
   slot?: number;
+  /**
+   * Severity of the figure itself — for a value that *is* a status (money
+   * overdue, a quota exceeded). Use sparingly: a row where every tile is
+   * coloured carries no signal at all.
+   */
+  tone?: 'default' | 'success' | 'warning' | 'danger';
   className?: string;
 }) {
   const hasDelta = typeof delta === 'number' && Number.isFinite(delta);
@@ -98,7 +109,7 @@ export function StatTile({
 
       <div className="mt-2 flex items-end justify-between gap-3">
         {/* Proportional figures: tabular-nums makes display sizes look loose */}
-        <p className="text-[1.625rem] font-semibold leading-none text-fg">{value}</p>
+        <p className={cn('text-[1.625rem] font-semibold leading-none', TONE_TEXT[tone])}>{value}</p>
         {trend && trend.length > 1 && <Sparkline values={trend} slot={slot} className="mb-0.5" />}
       </div>
 

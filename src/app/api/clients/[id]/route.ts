@@ -1,5 +1,5 @@
 import { createHandler, ok, badRequest, notFound, parseId } from '@/lib/api/handler';
-import { clientSchema } from '@/lib/validation/admin';
+import { clientSchema, patchOf } from '@/lib/validation/admin';
 import { diffFields } from '@/lib/db/repositories/activity';
 import * as clientsRepo from '@/lib/db/repositories/clients';
 
@@ -34,7 +34,7 @@ export async function PATCH(request: Request, context: Params): Promise<Response
   if (id === null) return badRequest('Identifiant invalide.');
 
   return createHandler(
-    { permission: 'clients.update', schema: clientSchema.partial() },
+    { permission: 'clients.update', schema: patchOf(clientSchema) },
     async ({ body, log }) => {
       const before = clientsRepo.findClient(id);
       if (!before) return notFound('Client introuvable.');

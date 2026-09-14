@@ -1,5 +1,5 @@
 import { createHandler, ok, badRequest, notFound, parseId } from '@/lib/api/handler';
-import { invoiceSchema } from '@/lib/validation/admin';
+import { invoiceSchema, patchOf } from '@/lib/validation/admin';
 import * as financeRepo from '@/lib/db/repositories/finance';
 import { addProjectEvent } from '@/lib/db/repositories/projects';
 import { formatMoney } from '@/lib/i18n/format';
@@ -30,7 +30,7 @@ export async function PATCH(request: Request, context: Params): Promise<Response
   if (id === null) return badRequest('Identifiant invalide.');
 
   return createHandler(
-    { permission: 'invoices.update', schema: invoiceSchema.partial() },
+    { permission: 'invoices.update', schema: patchOf(invoiceSchema) },
     async ({ body, user, log }) => {
       const before = financeRepo.findInvoice(id);
       if (!before) return notFound('Facture introuvable.');

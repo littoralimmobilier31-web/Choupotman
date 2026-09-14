@@ -1,5 +1,5 @@
 import { createHandler, ok, badRequest, notFound, parseId } from '@/lib/api/handler';
-import { quoteSchema } from '@/lib/validation/admin';
+import { quoteSchema, patchOf } from '@/lib/validation/admin';
 import * as financeRepo from '@/lib/db/repositories/finance';
 import { addProjectEvent } from '@/lib/db/repositories/projects';
 import { emit } from '@/lib/automation/engine';
@@ -26,7 +26,7 @@ export async function PATCH(request: Request, context: Params): Promise<Response
   if (id === null) return badRequest('Identifiant invalide.');
 
   return createHandler(
-    { permission: 'quotes.update', schema: quoteSchema.partial() },
+    { permission: 'quotes.update', schema: patchOf(quoteSchema) },
     async ({ body, user, log }) => {
       const before = financeRepo.findQuote(id);
       if (!before) return notFound('Devis introuvable.');
