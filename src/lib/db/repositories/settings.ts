@@ -64,16 +64,29 @@ export function setSetting(
         ? value ? '1' : '0'
         : String(value);
 
+  /**
+   * The metadata columns are only written when the caller actually supplies
+   * them. Passing a default here instead would be destructive: an admin form
+   * saves values without knowing each field's declared type, so defaulting
+   * `value_type` to 'string' would flatten every boolean, number and richtext
+   * setting on the first save — and the settings screen would then render the
+   * wrong control for them. NULL is coalesced to the existing row on update,
+   * and to the column default on insert.
+   */
   run(
     `INSERT INTO settings (key, value, group_name, value_type, label, updated_at)
-     VALUES (?, ?, ?, ?, ?, datetime('now'))
+     VALUES (?, ?, COALESCE(?, 'general'), COALESCE(?, 'string'), ?, datetime('now'))
      ON CONFLICT(key) DO UPDATE SET
        value = excluded.value,
-       group_name = COALESCE(excluded.group_name, settings.group_name),
-       value_type = COALESCE(excluded.value_type, settings.value_type),
-       label = COALESCE(excluded.label, settings.label),
+       group_name = COALESCE(?, settings.group_name),
+       value_type = COALESCE(?, settings.value_type),
+       label = COALESCE(?, settings.label),
        updated_at = datetime('now')`,
-    [key, serialised, options.group ?? 'general', options.type ?? 'string', options.label ?? null],
+    [
+      key, serialised,
+      options.group ?? null, options.type ?? null, options.label ?? null,
+      options.group ?? null, options.type ?? null, options.label ?? null,
+    ],
   );
 }
 
