@@ -27,6 +27,12 @@ export const POLICIES = {
   passwordReset: { limit: 4, windowMinutes: 60 },
   upload: { limit: 60, windowMinutes: 10 },
   briefSave: { limit: 200, windowMinutes: 60 },
+  /**
+   * Moodboard captures from outside the app (browser extension, share sheet).
+   * Generous enough to clip a page's worth of images in one sitting, tight
+   * enough that a leaked token cannot be used to fill the disk.
+   */
+  capture: { limit: 120, windowMinutes: 60 },
   api: { limit: 300, windowMinutes: 5 },
 } as const;
 

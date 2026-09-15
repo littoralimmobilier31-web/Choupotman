@@ -22,6 +22,15 @@ export type HandlerContext<TBody> = {
   body: TBody;
   request: Request;
   ip: string;
+  /**
+   * The parsed multipart body, for upload routes.
+   *
+   * A request body can only be read once, and this wrapper already reads it to
+   * find the CSRF token — so the parsed `FormData` is handed over rather than
+   * left for the handler to re-read and fail on. Present only for
+   * `multipart/form-data`; the text fields are also in `body`.
+   */
+  form: FormData | null;
   /** Records an audit entry pre-filled with the acting user. */
   log: (entry: {
     action: ActivityAction | (string & {});
@@ -65,13 +74,16 @@ export function createHandler<TSchema extends z.ZodTypeAny | undefined = undefin
 
       const mutating = request.method !== 'GET' && request.method !== 'HEAD';
       let raw: unknown;
+      let form: FormData | null = null;
 
       if (mutating) {
         const contentType = request.headers.get('content-type') ?? '';
         if (contentType.includes('application/json')) {
           raw = await request.json().catch(() => ({}));
         } else if (contentType.includes('form')) {
-          const form = await request.formData();
+          form = await request.formData();
+          // Only the text fields go through validation; files are handed to the
+          // handler through `context.form`, where `saveUpload` vets them.
           raw = Object.fromEntries(
             [...form.entries()].filter(([, value]) => typeof value === 'string'),
           );
@@ -105,6 +117,7 @@ export function createHandler<TSchema extends z.ZodTypeAny | undefined = undefin
         body,
         request,
         ip,
+        form,
         log: (entry) =>
           logActivity({
             userId: auth.user.id,
