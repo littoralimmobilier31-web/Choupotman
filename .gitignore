@@ -41,3 +41,4 @@ Thumbs.db
 # misc
 coverage/
 .vercel
+var/
