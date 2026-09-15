@@ -273,7 +273,14 @@ export const contractSchema = z.object({
   client_id: optionalId,
   project_id: optionalId,
   title: trimmed(200).min(2, 'Le titre est requis.'),
-  body: trimmed(60000).min(20, 'Le contenu est trop court.'),
+  /**
+   * Optional here, and required by the route instead: a contract drawn from a
+   * template sends an empty body on purpose — the server expands the template.
+   * Declaring a minimum length at this level would reject exactly the normal
+   * case. The route checks "a template or at least 20 characters", which is the
+   * real rule, and can say which one is missing.
+   */
+  body: trimmed(60000).optional(),
   status: z.enum(['draft', 'sent', 'signed', 'cancelled']).default('draft'),
   start_date: optionalDate,
   delivery_date: optionalDate,
