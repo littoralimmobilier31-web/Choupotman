@@ -153,6 +153,13 @@ console.log(id);
 if [[ -n "$PROPOSAL" ]]; then
   ok "proposition en attente créée (#$PROPOSAL)"
 
+  # Une exécution interrompue d'un run précédent laisse la tâche derrière elle,
+  # et l'assertion suivante mesurerait alors ce résidu plutôt que le garde-fou.
+  for stale in $(req "$BASE/api/taches?q=TEST%20%E2%80%94%20action%20confirm%C3%A9e" \
+    | tr '{' '\n' | sed -n 's/.*"id":\([0-9]*\),"project_id".*/\1/p'); do
+    api DELETE "/api/taches/$stale" >/dev/null 2>&1
+  done
+
   # Rien ne doit avoir été fait tant que l'utilisateur n'a pas confirmé.
   BEFORE="$(req "$BASE/api/taches?q=TEST%20%E2%80%94%20action%20confirm%C3%A9e" | grep -o '"id"' | wc -l | tr -d ' ')"
   if [[ "$BEFORE" == "0" ]]; then ok "aucune tâche créée avant confirmation"; else bad "une tâche existe déjà avant confirmation"; fi

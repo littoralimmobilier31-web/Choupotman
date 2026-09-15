@@ -124,6 +124,20 @@ run(\"DELETE FROM rate_limit_hits WHERE bucket LIKE 'login:%' OR bucket LIKE 'pa
 " >/dev/null 2>&1 || true
 }
 
+# Clears the generic API bucket.
+#
+# The policy is 300 requests per five minutes per user and IP — correct for a
+# real session, and exhausted about two thirds of the way through a full run of
+# every suite back to back. Past that point every assertion fails on 429 and the
+# run measures the limiter rather than the application. `scripts/test/run.sh`
+# calls this between suites; a single suite never comes close to the ceiling.
+reset_api_limits() {
+  npx tsx -e "
+import { run } from './src/lib/db/client';
+run(\"DELETE FROM rate_limit_hits WHERE bucket LIKE 'api:%' OR bucket LIKE 'upload:%' OR bucket LIKE 'aiAdmin:%'\");
+" >/dev/null 2>&1 || true
+}
+
 summary() {
   printf '\n\033[1mRésultat: %d réussis, %d échoués\033[0m\n' "$PASS" "$FAIL"
   [[ "$FAIL" -eq 0 ]]

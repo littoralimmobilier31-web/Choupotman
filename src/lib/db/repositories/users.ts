@@ -112,6 +112,17 @@ export function setUserPassword(id: number, passwordHash: string): void {
   );
 }
 
+/**
+ * Forces a password change at the next sign-in.
+ *
+ * Separate from `setUserPassword`, which clears the flag: an administrator
+ * resetting someone else's password needs both — a working temporary credential,
+ * and the certainty that the person will replace it with one only they know.
+ */
+export function requirePasswordChange(id: number): void {
+  run(`UPDATE users SET must_change_password = 1, updated_at = datetime('now') WHERE id = ?`, [id]);
+}
+
 export function markLoginSuccess(id: number): void {
   run(
     `UPDATE users

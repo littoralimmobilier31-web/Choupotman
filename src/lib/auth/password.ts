@@ -1,4 +1,4 @@
-import { randomBytes, scrypt as scryptCb, timingSafeEqual, createHash } from 'node:crypto';
+import { randomBytes, randomInt, scrypt as scryptCb, timingSafeEqual, createHash } from 'node:crypto';
 import { promisify } from 'node:util';
 
 const scrypt = promisify(scryptCb) as (
@@ -71,6 +71,43 @@ export function needsRehash(stored: string | null | undefined): boolean {
 /** URL-safe random token for sessions, invites, brief links, share links. */
 export function generateToken(bytes = 32): string {
   return randomBytes(bytes).toString('base64url');
+}
+
+/**
+ * A temporary password someone will read from a screen and type once.
+ *
+ * `generateToken` is the wrong tool here: base64url output happens to satisfy
+ * the character-class policy only sometimes, so using it for a password makes
+ * account creation and password resets fail at random. This guarantees one
+ * character from each required class and stays well above the length minimum.
+ *
+ * Ambiguous glyphs (O/0, l/1/I) are excluded because the value is transcribed by
+ * hand, and the alphabet is sized so `randomInt`'s rejection sampling keeps the
+ * distribution uniform.
+ */
+export function generateTemporaryPassword(length = 16): string {
+  const LOWER = 'abcdefghijkmnpqrstuvwxyz';
+  const UPPER = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const DIGITS = '23456789';
+  const SYMBOLS = '!@#$%*+=?';
+  const ALL = LOWER + UPPER + DIGITS + SYMBOLS;
+
+  const pick = (alphabet: string) => alphabet[randomInt(alphabet.length)];
+  const size = Math.max(12, length);
+
+  // One of each class first, so the policy is satisfied by construction rather
+  // than by luck; the rest is drawn from the full alphabet.
+  const chars = [pick(LOWER), pick(UPPER), pick(DIGITS), pick(SYMBOLS)];
+  while (chars.length < size) chars.push(pick(ALL));
+
+  // Fisher-Yates with crypto randomness: without the shuffle the first four
+  // positions would always follow the same class order.
+  for (let i = chars.length - 1; i > 0; i -= 1) {
+    const j = randomInt(i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+
+  return chars.join('');
 }
 
 /**
