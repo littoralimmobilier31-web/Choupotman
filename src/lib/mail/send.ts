@@ -151,7 +151,7 @@ type SmtpMessage = { to: string; subject: string; text: string; html: string };
 
 function encodeHeader(value: string): string {
   // RFC 2047 for non-ASCII subjects, so accents survive every client.
-  // eslint-disable-next-line no-control-regex
+
   if (!/[^\x00-\x7F]/.test(value)) return value;
   return `=?UTF-8?B?${Buffer.from(value, 'utf8').toString('base64')}?=`;
 }

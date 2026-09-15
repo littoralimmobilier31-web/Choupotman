@@ -134,7 +134,7 @@ export default async function CaseStudyPage({
 
         {study.cover_url && (
           <div className="container-page pt-10">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            { }
             <img
               src={study.cover_url}
               alt={study.title}

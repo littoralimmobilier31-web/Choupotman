@@ -46,6 +46,10 @@ export default function GlobalError({
           <RotateCcw className="size-4" />
           Réessayer
         </Button>
+        {/* A full page load on purpose, not <Link>: this boundary catches
+            client-side failures, and the router may be exactly what broke.
+            Navigating through it would then do nothing at all. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a href="/" className="inline-flex items-center rounded-lg border border-line px-4 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-hover hover:text-fg">
           Retour à l’accueil
         </a>

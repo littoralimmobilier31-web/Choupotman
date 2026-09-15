@@ -6,7 +6,6 @@ import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { Input, Select } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/types';
 
 /**
@@ -17,13 +16,11 @@ import type { Dictionary } from '@/lib/i18n/types';
  * avoid a navigation per keystroke.
  */
 export function ProjectFilters({
-  locale,
   dict,
   facets,
   current,
   resultCount,
 }: {
-  locale: Locale;
   dict: Dictionary;
   facets: { categories: { slug: string; name: string }[]; technologies: string[]; years: number[] };
   current: { q: string; categorie: string; techno: string; annee: string };

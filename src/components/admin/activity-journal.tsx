@@ -95,7 +95,7 @@ const ACTION_TONES: Record<string, BadgeTone> = {
 const ENTITY_ROUTES: Record<string, (id: number) => string> = {
   project: (id) => `/espace-admin/projets/${id}`,
   client: (id) => `/espace-admin/clients/${id}`,
-  lead: (id) => `/espace-admin/prospects`,
+  lead: () => '/espace-admin/prospects',
   quote: (id) => `/espace-admin/devis/${id}`,
   invoice: (id) => `/espace-admin/factures/${id}`,
   contract: (id) => `/espace-admin/contrats/${id}`,

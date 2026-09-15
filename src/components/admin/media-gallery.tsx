@@ -157,7 +157,7 @@ export function MediaGallery({
                   {item.kind === 'image' && item.url ? (
                     // The address is arbitrary and outside Next's image domains,
                     // so this is a plain <img> on purpose.
-                    // eslint-disable-next-line @next/next/no-img-element
+
                     <img
                       src={item.url}
                       alt={item.alt_text ?? item.caption ?? ''}

@@ -101,7 +101,6 @@ export default async function ProjectsPage({
 
       <div className="container-page py-10 sm:py-14">
         <ProjectFilters
-          locale={locale}
           dict={dict}
           facets={{
             categories: facets.categories.map((c) => ({ slug: c.slug, name: c.name })),

@@ -13,7 +13,7 @@ import * as filesRepo from '@/lib/db/repositories/files';
 import * as briefsRepo from '@/lib/db/repositories/briefs';
 import * as expensesRepo from '@/lib/db/repositories/expenses';
 import { logActivity } from '@/lib/db/repositories/activity';
-import { pruneSessions } from '@/lib/auth/session';
+import { pruneSessions } from '@/lib/db/repositories/sessions';
 import { pruneIndex } from '@/lib/db/repositories/search';
 import { formatMoney } from '@/lib/i18n/format';
 import { money } from '@/lib/money';

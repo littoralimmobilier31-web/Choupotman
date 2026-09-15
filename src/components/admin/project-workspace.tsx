@@ -2,12 +2,12 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CheckCircle2, Circle, Loader2, Plus, Sparkles, X } from 'lucide-react';
+import { CheckCircle2, Circle, Loader2, Plus, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Field, Input, Select } from '@/components/ui/field';
+import { Card, CardBody } from '@/components/ui/card';
+import { Input, Select } from '@/components/ui/field';
 import { Modal } from '@/components/ui/modal';
 import { SegmentTabs } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/misc';

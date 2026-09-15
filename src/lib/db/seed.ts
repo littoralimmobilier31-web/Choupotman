@@ -729,7 +729,7 @@ export function seedDemo(): DemoReport {
   });
   report.quotes = 1;
 
-  const quoteB = financeRepo.createQuote({
+  const _quoteB = financeRepo.createQuote({
     client_id: clientC,
     project_id: projectIds[2],
     title: 'Démo — Automatisation des devis',
@@ -781,7 +781,7 @@ export function seedDemo(): DemoReport {
   report.payments += 1;
 
   // Overdue invoice
-  const invoiceOverdue = financeRepo.createInvoice({
+  const _invoiceOverdue = financeRepo.createInvoice({
     client_id: clientB,
     project_id: projectIds[4],
     title: 'Démo — Vidéo institutionnelle',

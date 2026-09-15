@@ -1,6 +1,6 @@
 import 'server-only';
 import type Anthropic from '@anthropic-ai/sdk';
-import { available, completeWithTools, AiError, type ToolProposal } from './client';
+import { available, completeWithTools, AiError } from './client';
 import { analyseProjectFromRules } from './rules';
 import * as projectsRepo from '@/lib/db/repositories/projects';
 import * as financeRepo from '@/lib/db/repositories/finance';

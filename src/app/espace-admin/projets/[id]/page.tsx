@@ -28,7 +28,6 @@ import { listCategories } from '@/lib/db/repositories/content';
 import { listUsers } from '@/lib/db/repositories/users';
 import { formatMoney, formatShortDate, formatRelative } from '@/lib/i18n/format';
 import { money } from '@/lib/money';
-import { cn } from '@/lib/utils';
 
 /**
  * Project hub.

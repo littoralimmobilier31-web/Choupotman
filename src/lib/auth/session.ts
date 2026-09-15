@@ -158,13 +158,13 @@ export function listUserSessions(userId: number): SessionRow[] {
   );
 }
 
-/** Housekeeping — expired rows serve no purpose. */
-export function pruneSessions(): number {
-  const result = run(
-    `DELETE FROM sessions WHERE expires_at < datetime('now', '-7 days') OR revoked_at < datetime('now', '-7 days')`,
-  );
-  return result.changes;
-}
+/**
+ * Housekeeping lives in `db/repositories/sessions.ts` and is re-exported here
+ * for callers that already import it from this module. It is plain SQL with no
+ * request context, and the daily sweep runs it from the command line — where
+ * this module's `server-only` guard would throw.
+ */
+export { pruneSessions } from '@/lib/db/repositories/sessions';
 
 // ── Client-portal sessions ───────────────────────────────────────────────
 // Deliberately a separate table and cookie: a portal visitor can never be

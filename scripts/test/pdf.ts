@@ -11,7 +11,7 @@ loadEnv({ quiet: true });
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { closeDb } from '../../src/lib/db/client';
-import { listQuotes, listInvoices, listContracts, findContractTemplate, defaultContractTemplate, createContract } from '../../src/lib/db/repositories/finance';
+import { listQuotes, listInvoices, listContracts, defaultContractTemplate, createContract } from '../../src/lib/db/repositories/finance';
 import { renderContractPdf, renderInvoicePdf, renderQuotePdf } from '../../src/lib/pdf/finance';
 import { renderTemplate } from '../../src/lib/db/repositories/comms';
 import { findClient } from '../../src/lib/db/repositories/clients';

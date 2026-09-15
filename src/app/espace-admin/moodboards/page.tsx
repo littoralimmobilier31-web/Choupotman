@@ -63,7 +63,7 @@ export default async function MoodboardsPage() {
                   >
                     {board.cover_url ? (
                       // Arbitrary external address, outside Next's image domains.
-                      // eslint-disable-next-line @next/next/no-img-element
+
                       <img
                         src={board.cover_url}
                         alt=""

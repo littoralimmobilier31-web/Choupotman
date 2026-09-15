@@ -25,7 +25,7 @@ const STAGE_LABELS: Record<string, string> = {
   todo: 'À venir', in_progress: 'En cours', done: 'Terminée', blocked: 'En attente',
 };
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+export async function generateMetadata() {
   return { title: 'Projet' };
 }
 

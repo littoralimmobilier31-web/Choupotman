@@ -25,7 +25,7 @@ document.documentElement.style.colorScheme=dark?'dark':'light';
 }catch(e){}})();`;
 
 export function ThemeScript() {
-  // eslint-disable-next-line react/no-danger
+
   return <script dangerouslySetInnerHTML={{ __html: SCRIPT }} />;
 }
 

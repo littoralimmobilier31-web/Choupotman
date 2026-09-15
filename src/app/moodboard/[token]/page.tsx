@@ -66,7 +66,7 @@ export default async function SharedMoodboardPage({ params }: { params: Promise<
               {item.kind === 'image' && (
                 // Arbitrary address, or a library file served through the portal-
                 // style handler. A plain <img> either way.
-                // eslint-disable-next-line @next/next/no-img-element
+
                 <img
                   src={item.file_id ? `/api/moodboard-public/${token}/${item.file_id}` : (item.url ?? '')}
                   alt={item.notes ?? ''}

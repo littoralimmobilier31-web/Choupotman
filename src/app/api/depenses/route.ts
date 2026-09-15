@@ -1,4 +1,4 @@
-import { createHandler, list, ok, badRequest } from '@/lib/api/handler';
+import { createHandler, ok, badRequest } from '@/lib/api/handler';
 import { expenseSchema } from '@/lib/validation/admin';
 import {
   createExpense,

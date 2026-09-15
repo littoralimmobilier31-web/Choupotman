@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Copy, KeyRound, Lock, Pencil, Plus, ShieldAlert, Trash2, UserPlus } from 'lucide-react';
+import { Check, Copy, KeyRound, Lock, Pencil, ShieldAlert, Trash2, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge, type BadgeTone } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

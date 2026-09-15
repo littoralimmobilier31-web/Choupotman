@@ -15,7 +15,7 @@ export function Avatar({
   const dim = { width: size, height: size };
   if (src) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
+
       <img
         src={src}
         alt={name ?? ''}

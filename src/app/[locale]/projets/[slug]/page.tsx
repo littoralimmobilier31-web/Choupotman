@@ -195,7 +195,7 @@ export default async function ProjectDetailPage({
         {/* Cover */}
         {project.cover_url ? (
           <div className="container-page -mt-2 pb-4 pt-10">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            { }
             <img
               src={project.cover_url}
               alt={project.title}
@@ -293,7 +293,7 @@ export default async function ProjectDetailPage({
                   .map((item) => (
                     <li key={item.id} className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface-raised">
                       {item.url ? (
-                        // eslint-disable-next-line @next/next/no-img-element
+
                         <img
                           src={item.url}
                           alt={item.alt_text ?? item.caption ?? project.title}

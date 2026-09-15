@@ -228,7 +228,7 @@ export function MoodboardCanvas({
                 <>
                   {/* Arbitrary address or an authenticated library file: a plain
                       <img> either way, never Next's optimiser. */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  { }
                   <img
                     src={item.file_id ? `/api/fichiers/${item.file_id}/telecharger?apercu=1` : (item.url ?? '')}
                     alt={item.notes ?? ''}

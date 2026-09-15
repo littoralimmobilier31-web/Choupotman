@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardBody } from '@/components/ui/card';
 import { Field, Input, Textarea, Switch } from '@/components/ui/field';
 import { useResourceForm } from './use-resource-form';
 
