@@ -103,12 +103,14 @@ export function updateEvent(
     title?: string; description?: string | null; kind?: CalendarEventKind;
     starts_at?: string; ends_at?: string | null; all_day?: boolean;
     location?: string | null; status?: CalendarEventRow['status']; color?: string | null;
+    url?: string | null; client_id?: number | null; project_id?: number | null;
   },
 ): void {
   const map: Record<string, unknown> = {
     title: patch.title, description: patch.description, kind: patch.kind,
     starts_at: patch.starts_at, ends_at: patch.ends_at, location: patch.location,
-    status: patch.status, color: patch.color,
+    status: patch.status, color: patch.color, url: patch.url,
+    client_id: patch.client_id, project_id: patch.project_id,
   };
   if (patch.all_day !== undefined) map.all_day = patch.all_day ? 1 : 0;
   const fields: string[] = [];
