@@ -424,17 +424,34 @@ export const portfolioSchema = z.object({
   services_done: z.array(trimmed(160)).max(40).default([]),
   links: z.array(z.object({ label: trimmed(80), url: trimmed(500) })).max(20).default([]),
   videos: z
-    .array(z.object({ title: trimmed(160), url: trimmed(500), provider: optionalText(40) }))
+    .array(z.object({ title: trimmed(160), url: trimmed(500), provider: trimmed(40).optional() }))
     .max(20)
     .default([]),
   metrics: z
-    .array(z.object({ label: trimmed(120), value: trimmed(80), note: optionalText(200) }))
+    .array(z.object({ label: trimmed(120), value: trimmed(80), note: trimmed(200).optional() }))
     .max(20)
     .default([]),
   position: z.coerce.number().int().min(0).max(999).default(0),
   is_featured: z.boolean().default(false),
   seo_title: optionalText(200),
   seo_description: optionalText(400),
+});
+
+/**
+ * A gallery entry on a portfolio project.
+ *
+ * Either a file from the library (`file_id`) or an external address (`url`);
+ * the route refuses a media with neither, since an empty frame on the public
+ * page is worse than no frame at all.
+ */
+export const portfolioMediaSchema = z.object({
+  csrf,
+  file_id: optionalId,
+  url: optionalText(500),
+  kind: z.enum(['image', 'video', 'embed']).default('image'),
+  caption: optionalText(300),
+  alt_text: optionalText(300),
+  position: z.coerce.number().int().min(0).max(999).optional(),
 });
 
 export const caseStudySchema = z.object({
@@ -451,7 +468,7 @@ export const caseStudySchema = z.object({
   tools_used: optionalText(2000),
   result: optionalText(8000),
   metrics: z
-    .array(z.object({ label: trimmed(120), value: trimmed(80), note: optionalText(200) }))
+    .array(z.object({ label: trimmed(120), value: trimmed(80), note: trimmed(200).optional() }))
     .max(20)
     .default([]),
   testimonial_quote: optionalText(2000),

@@ -1064,6 +1064,10 @@ export function listFaqs(options: { publishedOnly?: boolean; locale?: Locale } =
   return rows;
 }
 
+export function findFaq(id: number): FaqRow | null {
+  return one<FaqRow>('SELECT * FROM faqs WHERE id = ?', [id]);
+}
+
 export function upsertFaq(input: {
   id?: number; question: string; answer: string; category?: string | null;
   position?: number; is_published?: boolean; locale?: string;

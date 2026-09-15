@@ -32,20 +32,20 @@ export async function PATCH(request: Request, context: Params): Promise<Response
       if (!before) return notFound('Devis introuvable.');
 
       financeRepo.updateQuote(id, {
-        client_id: body.client_id ?? undefined,
-        project_id: body.project_id ?? undefined,
-        title: body.title ?? undefined,
+        client_id: body.client_id,
+        project_id: body.project_id,
+        title: body.title,
         status: body.status,
         issue_date: body.issue_date ?? undefined,
-        valid_until: body.valid_until ?? undefined,
+        valid_until: body.valid_until,
         currency: body.currency,
         discount_type: body.discount_type,
         discount_value: body.discount_value,
         tax_rate: body.tax_rate,
-        delivery_terms: body.delivery_terms ?? undefined,
-        payment_terms: body.payment_terms ?? undefined,
-        conditions: body.conditions ?? undefined,
-        notes: body.notes ?? undefined,
+        delivery_terms: body.delivery_terms,
+        payment_terms: body.payment_terms,
+        conditions: body.conditions,
+        notes: body.notes,
         locale: body.locale,
         items: body.items,
       });

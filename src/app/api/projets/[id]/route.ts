@@ -48,19 +48,19 @@ export async function PATCH(request: Request, context: Params): Promise<Response
 
       projectsRepo.updateProject(id, {
         title: body.title,
-        client_id: body.client_id ?? undefined,
-        category_id: body.category_id ?? undefined,
-        description: body.description ?? undefined,
+        client_id: body.client_id,
+        category_id: body.category_id,
+        description: body.description,
         status: body.status,
         priority: body.priority,
         budget: body.budget,
         currency: body.currency,
-        start_date: body.start_date ?? undefined,
-        delivery_date: body.delivery_date ?? undefined,
+        start_date: body.start_date,
+        delivery_date: body.delivery_date,
         revisions_included: body.revisions_included,
         revision_extra_cost: body.revision_extra_cost,
-        notes: body.notes ?? undefined,
-        color: body.color ?? undefined,
+        notes: body.notes,
+        color: body.color,
       });
 
       // A status change is a story beat: record it on the timeline and let the

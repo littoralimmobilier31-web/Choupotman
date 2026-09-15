@@ -41,21 +41,21 @@ export async function PATCH(request: Request, context: Params): Promise<Response
 
       clientsRepo.updateClient(id, {
         name: body.name,
-        company: body.company ?? undefined,
-        email: body.email ?? undefined,
-        phone: body.phone ?? undefined,
-        whatsapp: body.whatsapp ?? undefined,
-        country: body.country ?? undefined,
-        city: body.city ?? undefined,
-        address: body.address ?? undefined,
-        website: body.website ?? undefined,
+        company: body.company,
+        email: body.email,
+        phone: body.phone,
+        whatsapp: body.whatsapp,
+        country: body.country,
+        city: body.city,
+        address: body.address,
+        website: body.website,
         social: body.social,
-        tax_id: body.tax_id ?? undefined,
+        tax_id: body.tax_id,
         currency: body.currency,
         preferred_locale: body.preferred_locale,
         status: body.status,
-        source: body.source ?? undefined,
-        notes: body.notes ?? undefined,
+        source: body.source,
+        notes: body.notes,
       });
 
       const diff = diffFields(before as unknown as Record<string, unknown>, body as Record<string, unknown>);

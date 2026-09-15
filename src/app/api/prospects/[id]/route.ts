@@ -31,21 +31,21 @@ export async function PATCH(request: Request, context: Params): Promise<Response
 
       leadsRepo.updateLead(id, {
         name: body.name,
-        company: body.company ?? undefined,
-        email: body.email ?? undefined,
-        phone: body.phone ?? undefined,
-        country: body.country ?? undefined,
-        city: body.city ?? undefined,
+        company: body.company,
+        email: body.email,
+        phone: body.phone,
+        country: body.country,
+        city: body.city,
         stage: body.stage,
         source: body.source,
-        service_interest: body.service_interest ?? undefined,
-        budget_range: body.budget_range ?? undefined,
+        service_interest: body.service_interest,
+        budget_range: body.budget_range,
         estimated_value: body.estimated_value,
         currency: body.currency,
-        deadline_hint: body.deadline_hint ?? undefined,
-        message: body.message ?? undefined,
-        assigned_to: body.assigned_to ?? undefined,
-        lost_reason: body.lost_reason ?? undefined,
+        deadline_hint: body.deadline_hint,
+        message: body.message,
+        assigned_to: body.assigned_to,
+        lost_reason: body.lost_reason,
         // Qualification signals changed, so the score must follow them. Built
         // field by field rather than spreading the row, because only these six
         // feed the score and the row carries incompatible flag types.

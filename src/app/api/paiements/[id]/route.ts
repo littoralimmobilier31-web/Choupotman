@@ -40,10 +40,10 @@ export async function PATCH(request: Request, context: Params): Promise<Response
       financeRepo.updatePayment(id, {
         amount: body.amount,
         method: body.method,
-        reference: body.reference ?? undefined,
+        reference: body.reference,
         paid_at: body.paid_at ?? undefined,
         status: body.status,
-        notes: body.notes ?? undefined,
+        notes: body.notes,
       });
 
       log({

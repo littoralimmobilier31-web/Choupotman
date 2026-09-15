@@ -36,15 +36,15 @@ export async function PATCH(request: Request, context: Params): Promise<Response
       if (!before) return notFound('Tâche introuvable.');
 
       projectsRepo.updateTask(id, {
-        project_id: body.project_id ?? undefined,
-        stage_id: body.stage_id ?? undefined,
+        project_id: body.project_id,
+        stage_id: body.stage_id,
         title: body.title,
-        description: body.description ?? undefined,
-        assignee_id: body.assignee_id ?? undefined,
+        description: body.description,
+        assignee_id: body.assignee_id,
         priority: body.priority,
         status: body.status,
-        due_date: body.due_date ?? undefined,
-        estimate_hours: body.estimate_hours ?? undefined,
+        due_date: body.due_date,
+        estimate_hours: body.estimate_hours,
         spent_hours: body.spent_hours,
       });
 

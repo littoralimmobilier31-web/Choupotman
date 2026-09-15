@@ -40,8 +40,8 @@ export async function PATCH(request: Request, context: Params): Promise<Response
 
       projectsRepo.updateRevision(id, {
         status: body.status,
-        title: body.title ?? undefined,
-        description: body.description ?? undefined,
+        title: body.title,
+        description: body.description,
         extra_cost: body.extra_cost,
       });
 

@@ -51,9 +51,9 @@ export async function PATCH(request: Request, context: Params): Promise<Response
     briefsRepo.updateBrief(id, {
       title: body.title,
       status: body.status,
-      introText: body.intro_text ?? undefined,
-      projectId: body.project_id ?? undefined,
-      clientId: body.client_id ?? undefined,
+      introText: body.intro_text,
+      projectId: body.project_id,
+      clientId: body.client_id,
       expiresAt:
         body.expires_in_days === undefined
           ? undefined

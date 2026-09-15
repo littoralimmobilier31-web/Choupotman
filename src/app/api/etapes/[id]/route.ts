@@ -24,9 +24,9 @@ export async function PATCH(request: Request, context: Params): Promise<Response
 
       projectsRepo.updateStage(id, {
         name: body.name,
-        description: body.description ?? undefined,
+        description: body.description,
         status: body.status,
-        due_date: body.due_date ?? undefined,
+        due_date: body.due_date,
         position: body.position,
       });
 

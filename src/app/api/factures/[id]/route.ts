@@ -58,20 +58,20 @@ export async function PATCH(request: Request, context: Params): Promise<Response
       }
 
       financeRepo.updateInvoice(id, {
-        client_id: body.client_id ?? undefined,
-        project_id: body.project_id ?? undefined,
-        quote_id: body.quote_id ?? undefined,
-        title: body.title ?? undefined,
+        client_id: body.client_id,
+        project_id: body.project_id,
+        quote_id: body.quote_id,
+        title: body.title,
         status: body.status,
         kind: body.kind,
         issue_date: body.issue_date ?? undefined,
-        due_date: body.due_date ?? undefined,
+        due_date: body.due_date,
         currency: body.currency,
         discount_type: body.discount_type,
         discount_value: body.discount_value,
         tax_rate: body.tax_rate,
-        payment_terms: body.payment_terms ?? undefined,
-        notes: body.notes ?? undefined,
+        payment_terms: body.payment_terms,
+        notes: body.notes,
         locale: body.locale,
         items: body.items,
       });
